@@ -1,46 +1,71 @@
-/* Stuff from client.js */
+SUCCESS             =  1;
+ERR_BAD_CREDENTIALS = -1;
+ERR_USER_EXISTS     = -2;
+ERR_BAD_USERNAME    = -3;
+ERR_BAD_PASSWORD    = -4;
 
-/* Takes a dictionary to be JSON encoded, calls the success
-   function with the diction decoded from the JSON response.*/
-function json_request(page, dict, success, failure) {
+
+function clear_form() {
+    $("#user").val("");
+    $("#password").val("");
+}
+
+function send_credentials(username, password, path, on_success) {
+    json_data = JSON.stringify( { user : username, password : password });
     $.ajax({
-        type: 'POST',
-        url: page,
-        data: JSON.stringify(dict),
-        contentType: "application/json",
-        dataType: "json",
-        success: success,
-        error: failure
+	type: 'POST',
+	url: path,
+        data: json_data,
+	contentType: "application/json",
+	dataType: "json",
+	success: on_success,
+	error: alert_error
     });
 }
 
-debug_flag = false;
+function alert_error(e) {
+    alert('An error occured on request');
+}
 
-ERR_BAD_CREDENTIALS = (-1);
-ERR_USER_EXISTS = (-2);
-ERR_BAD_USERNAME = (-3);
-ERR_BAD_PASSWORD  = -4;
+function handle_response(user, request_type, response) {
+    err = response.errCode;
+    count = response.count;
+    if (err == SUCCESS) {
+        is_new = (request_type == "add")
+	show_welcome_screen(user, count, is_new);
+        return
+    }
+    err_msg = "could not find error message";
+    switch (err) {
+    case -1:
+	err_msg = "Invalid username and password combination."
+	break;
+    case -2:
+        err_msg = "This username already exists."
+	break;
+    case -3:
+	err_msg = "The username should be non-empty and at most 128 characters long."
+	break;
+    case -4:
+	err_msg = "The password should be at most 128 characters long."
+    }
+    $('#home_msg').html(err_msg + "  Please try again.");
 
+    
+}
 
-
-function get_message_for_errcode(code) {
-    /* "Invalid username and password combination. Please try again. " (ERR_BAD_CREDENTIALS)
-       "The user name should not be empty. Please try again." (ERR_BAD_USERNAME)
-       "This user name already exists. Please try again." (ERR_USER_EXISTS)
-    */
-
-    if( code == ERR_BAD_CREDENTIALS) {
-        return ("Invalid username and password combination. Please try again. ");
-    } else if( code == ERR_BAD_USERNAME) {
-        return ("The user name should not be empty and at most 128 characters long. Please try again.");
-    } else if( code == ERR_USER_EXISTS) {
-        return ("This user name already exists. Please try again.");
-    } else if( code == ERR_BAD_PASSWORD) {
-        return ("The password should be at most 128 characters long. Please try again");
+function show_welcome_screen(user, count, is_new) {
+    $('#login_screen').hide();
+    if (is_new) {
+	$('#welcome_msg').html("Welcome new user " + user + "! You have logged in once.");
     } else {
-        // This case should never happen!
-        if( debug_flag ) { alert('Illegal error code encountered: ' + code); }
-        return ("Unknown error occured: " + code);
-   }
+        $('#welcome_msg').html("Welcome back " + user + "! You have logged in " + count + " times.");
+    }
+    $('#welcome_screen').show();
+}
+
+function show_login_screen() {
+    $('#welcome_screen').hide();
+    $('#login_screen').show();
 }
 

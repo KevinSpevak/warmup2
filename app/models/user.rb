@@ -17,7 +17,7 @@ class User < ActiveRecord::Base
     errCode = 1
     if user.length < 1 or user.length > 128
       errCode = -3
-    elsif password.length < 1 or password.length > 128
+    elsif password.length > 128
       errCode = -4
     end
     return errCode
@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
   #returns appropriate error code (1 if logged in correctly)
   def self.login(user, password)
     errCode = 1
-    count = User.getCount(user, password) #if this is 0, user does not exist
+    count = User.getCount(user, password) #if this is 0, credentials are not valid
     if count == 0
       errCode = -1
     else 
