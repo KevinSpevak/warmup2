@@ -47,3 +47,6 @@ end
 
 # For heroku
 gem 'rails_12factor', group: :production
+
+# Testing with rspec
+gem 'rspec-rails', '~> 3.0.0.beta'
