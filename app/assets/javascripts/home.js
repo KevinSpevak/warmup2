@@ -65,6 +65,7 @@ function show_welcome_screen(user, count, is_new) {
 }
 
 function show_login_screen() {
+    $('#home_msg').html("Please enter your credentials below.");   
     $('#welcome_screen').hide();
     $('#login_screen').show();
 }
