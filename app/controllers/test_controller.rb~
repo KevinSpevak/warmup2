@@ -1,0 +1,9 @@
+class TestController < ApplicationController
+  def reset
+
+  end
+
+  def unit_tests
+
+  end
+end

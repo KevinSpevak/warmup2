@@ -7,10 +7,8 @@ LoginCounter::Application.routes.draw do
   root 'home#index'
   post 'users/login' => 'users#login'
   post 'users/add' => 'users#add'
-  post 'TESTAPI/resetFixture' => 'test#resetFixture'
-  post 'TESTAPI/unit-tests' => 'test#unit-tests'
-
-  # Example of regular route:
+  post 'TESTAPI/resetFixture' => 'test#reset'
+  post 'TESTAPI/unitTests' => 'test#unit_tests'
   #   get 'products/:id' => 'catalog#view'
 
   # Example of named route that can be invoked with purchase_url(id: product.id)

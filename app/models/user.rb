@@ -51,5 +51,9 @@ class User < ActiveRecord::Base
     newUser.save
     return true
   end
+
+  def self.resetFixture()
+    User.destroy_all()
+  end
       
 end
